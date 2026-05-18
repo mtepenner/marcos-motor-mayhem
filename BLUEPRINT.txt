@@ -1,0 +1,87 @@
+marcos-motor-mayhem/
+├── .github/                    
+│   ├── ISSUE_TEMPLATE/         
+│   ├── PULL_REQUEST_TEMPLATE.md
+│   └── workflows/              
+│       ├── build-engine.yml    
+│       └── deploy-net.yml      
+│
+├── assets/                     
+│   ├── audio/                  
+│   ├── models/                 
+│   └── ui/                     
+│
+├── docs/                       
+│   ├── design/                 
+│   ├── architecture/           
+│   └── api/                    
+│
+├── src/                        
+│   ├── engine/                 # Core game engine (C++)
+│   │   ├── core/
+│   │   │   ├── main.cpp                 # Entry point for the game client
+│   │   │   ├── game_loop.h/.cpp         # Main tick/render loop
+│   │   │   └── memory_pool.h/.cpp       # Custom memory allocators for performance
+│   │   ├── physics/            
+│   │   │   ├── collision.h/.cpp         # AABB and sphere collision detection
+│   │   │   ├── rigidbody.h/.cpp         # Mass, velocity, and gravity math
+│   │   │   └── kart_dynamics.h/.cpp     # Custom friction, drifting, and momentum logic
+│   │   ├── render/             
+│   │   │   ├── renderer.h/.cpp          # Abstract base class for the rendering pipeline
+│   │   │   ├── vulkan_backend.h/.cpp    # Vulkan-specific implementation
+│   │   │   ├── camera.h/.cpp            # Third-person follow camera logic
+│   │   │   └── shader_manager.h/.cpp    # Loading and binding GLSL/HLSL shaders
+│   │   └── input/              
+│   │       ├── input_manager.h/.cpp     # Polling hardware inputs
+│   │       └── controller_map.h/.cpp    # Mapping raw inputs to game actions (e.g., "Accelerate")
+│   │
+│   ├── game/                   # Game logic (C++)
+│   │   ├── entities/           
+│   │   │   ├── entity.h/.cpp            # Base class for all game objects
+│   │   │   ├── kart.h/.cpp              # Kart-specific state and stats (Marco, Linguini, etc.)
+│   │   │   └── hazard.h/.cpp            # Track hazards (e.g., cows on Bovine Byway)
+│   │   ├── items/              
+│   │   │   ├── item_manager.h/.cpp      # RNG logic for item boxes based on race placement
+│   │   │   ├── projectile.h/.cpp        # Homing and bouncing logic for thrown items
+│   │   │   └── boost.h/.cpp             # Speed boost state modifiers
+│   │   └── modes/              
+│   │       ├── race_state.h/.cpp        # Lap counting, placement tracking, and timers
+│   │       ├── grand_prix.h/.cpp        # Logic for a 4-race cup progression
+│   │       └── time_trial.h/.cpp        # Ghost saving and precise timing
+│   │
+│   └── network/                # Backend and multiplayer services (Go)
+│       ├── matchmaking/        
+│       │   ├── main.go                  # Service entry point
+│       │   ├── ticket.go                # Player queueing logic
+│       │   └── server_allocator.go      # Spinning up game server instances
+│       ├── state_sync/         
+│       │   ├── server.go                # UDP server for low-latency state updates
+│       │   ├── client_handler.go        # Handling incoming player packets
+│       │   └── dead_reckoning.go        # Extrapolating kart positions between packets
+│       └── leaderboards/       
+│           ├── api.go                   # REST/gRPC endpoints for clients
+│           ├── db.go                    # Redis/PostgreSQL connection logic
+│           └── routes.go                # HTTP route definitions
+│
+├── tests/                      
+│   ├── engine_tests/           # Catch2 or GoogleTest for C++
+│   │   ├── test_collision.cpp
+│   │   ├── test_kart_dynamics.cpp
+│   │   └── test_memory_pool.cpp
+│   └── network_tests/          # Standard Go testing
+│       ├── matchmaker_test.go
+│       ├── packet_loss_sim_test.go
+│       └── db_integration_test.go
+│
+├── tools/                      
+│   ├── track_editor/           
+│   │   ├── export_spline.py             # Python script for Blender to export track curves
+│   │   └── generate_navmesh.cpp         # AI pathfinding generation tool
+│   └── asset_packer/           
+│       └── pack_assets.sh               # Bash script to compress raw assets into .pak files
+│
+├── .gitignore                  
+├── CMakeLists.txt              # Build configuration for the C++ game client
+├── go.mod                      # Go module dependencies for backend services
+├── go.sum
+└── README.md
