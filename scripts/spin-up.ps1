@@ -4,8 +4,11 @@ param(
     [int]$MatchmakerPort = 50051,
     [string]$RedisAddress = "localhost:6379"
 )
-
+$ErrorActionPreference = "Continue"
 $ErrorActionPreference = "Stop"
+if ($null -ne (Get-Variable -Name PSNativeCommandUseErrorActionPreference -ErrorAction SilentlyContinue)) {
+    $PSNativeCommandUseErrorActionPreference = $false
+}
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
 Set-Location $repoRoot
@@ -18,23 +21,45 @@ if (-not (Test-Path $stateDir)) {
 
 $redisContainer = "mmm-redis"
 $startedRedis = $false
+$dockerPipe = "\\.\pipe\dockerDesktopLinuxEngine"
+function Invoke-DockerSafely {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string[]]$Arguments
+    )
 
-if (Get-Command docker -ErrorAction SilentlyContinue) {
-    $existingContainer = docker ps -a --filter "name=^$redisContainer$" --format "{{.Names}}"
-    if (-not $existingContainer) {
-        Write-Host "[spin-up] Starting Redis container '$redisContainer'..."
-        docker run -d --name $redisContainer -p 6379:6379 redis:7-alpine | Out-Null
-        $startedRedis = $true
+    $output = & docker @Arguments 2>&1
+    if ($LASTEXITCODE -ne 0) {
+        return $null
+    }
+
+    return $output
+}
+
+if ((Get-Command docker -ErrorAction SilentlyContinue) -and (Test-Path $dockerPipe)) {
+    $existingContainer = Invoke-DockerSafely -Arguments @("ps", "-a", "--filter", "name=^$redisContainer$", "--format", "{{.Names}}")
+    if ($null -eq $existingContainer) {
+        Write-Host "[spin-up] Docker is installed but the daemon is unreachable. Assuming Redis is available at $RedisAddress"
     } else {
-        $runningContainer = docker ps --filter "name=^$redisContainer$" --format "{{.Names}}"
-        if (-not $runningContainer) {
-            Write-Host "[spin-up] Starting existing Redis container '$redisContainer'..."
-            docker start $redisContainer | Out-Null
-            $startedRedis = $true
+        if (-not $existingContainer) {
+            Write-Host "[spin-up] Starting Redis container '$redisContainer'..."
+            $started = Invoke-DockerSafely -Arguments @("run", "-d", "--name", $redisContainer, "-p", "6379:6379", "redis:7-alpine")
+            if ($null -ne $started) {
+                $startedRedis = $true
+            }
+        } else {
+            $runningContainer = Invoke-DockerSafely -Arguments @("ps", "--filter", "name=^$redisContainer$", "--format", "{{.Names}}")
+            if (-not $runningContainer) {
+                Write-Host "[spin-up] Starting existing Redis container '$redisContainer'..."
+                $started = Invoke-DockerSafely -Arguments @("start", $redisContainer)
+                if ($null -ne $started) {
+                    $startedRedis = $true
+                }
+            }
         }
     }
 } else {
-    Write-Host "[spin-up] Docker not found. Assuming Redis is already available at $RedisAddress"
+    Write-Host "[spin-up] Docker daemon not available. Assuming Redis is already available at $RedisAddress"
 }
 
 Write-Host "[spin-up] Configuring CMake ($BuildType)..."
@@ -43,7 +68,7 @@ cmake -B build -DCMAKE_BUILD_TYPE=$BuildType
 Write-Host "[spin-up] Building game ($BuildType)..."
 cmake --build build --config $BuildType
 
-$matchmakerOutput = Join-Path $repoRoot "build/matchmaker"
+$matchmakerOutput = Join-Path $repoRoot "build/matchmaker.exe"
 $matchmakerSource = Join-Path $repoRoot "src/cmd/matchmaker"
 
 Write-Host "[spin-up] Building matchmaker..."
@@ -52,6 +77,10 @@ try {
     go build -o $matchmakerOutput main.go
 } finally {
     Pop-Location
+}
+
+if (-not (Test-Path $matchmakerOutput)) {
+    throw "Matchmaker executable not found at $matchmakerOutput"
 }
 
 if (Test-Path $stateFile) {

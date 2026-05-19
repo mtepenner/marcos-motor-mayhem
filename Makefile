@@ -1,5 +1,7 @@
 .PHONY: build clean test help run run-matchmaker up down all
 
+POWERSHELL := $(shell where pwsh >NUL 2>NUL && echo pwsh || echo powershell)
+
 help:
 	@echo "marcos-motor-mayhem - Kart Racing Game Engine"
 	@echo ""
@@ -47,10 +49,10 @@ run-matchmaker:
 	@./build/matchmaker --port 50051 --redis localhost:6379
 
 up:
-	@pwsh -ExecutionPolicy Bypass -File scripts/spin-up.ps1
+	@$(POWERSHELL) -ExecutionPolicy Bypass -File scripts/spin-up.ps1
 
 down:
-	@pwsh -ExecutionPolicy Bypass -File scripts/spin-down.ps1
+	@$(POWERSHELL) -ExecutionPolicy Bypass -File scripts/spin-down.ps1
 
 test-backend:
 	@echo "Testing Go backend services..."
