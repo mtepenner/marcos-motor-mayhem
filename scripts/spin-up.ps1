@@ -4,7 +4,6 @@ param(
     [int]$MatchmakerPort = 50051,
     [string]$RedisAddress = "localhost:6379"
 )
-$ErrorActionPreference = "Continue"
 $ErrorActionPreference = "Stop"
 if ($null -ne (Get-Variable -Name PSNativeCommandUseErrorActionPreference -ErrorAction SilentlyContinue)) {
     $PSNativeCommandUseErrorActionPreference = $false
@@ -12,6 +11,43 @@ if ($null -ne (Get-Variable -Name PSNativeCommandUseErrorActionPreference -Error
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
 Set-Location $repoRoot
+
+function Add-PathIfExists {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$PathToAdd
+    )
+
+    if ((Test-Path $PathToAdd) -and ($env:PATH -notlike "*$PathToAdd*")) {
+        $env:PATH = "$PathToAdd;$env:PATH"
+    }
+}
+
+# Ensure required tools are reachable when launched from different shells/environments.
+if (-not (Get-Command cmake -ErrorAction SilentlyContinue)) {
+    Add-PathIfExists -PathToAdd "C:\Program Files\CMake\bin"
+}
+if (-not (Get-Command go -ErrorAction SilentlyContinue)) {
+    Add-PathIfExists -PathToAdd "C:\Program Files\Go\bin"
+}
+
+if (-not (Get-Command cmake -ErrorAction SilentlyContinue)) {
+    throw "CMake not found. Install with: winget install --id Kitware.CMake -e"
+}
+if (-not (Get-Command go -ErrorAction SilentlyContinue)) {
+    throw "Go not found. Install with: winget install --id GoLang.Go -e"
+}
+
+if (-not $env:VULKAN_SDK) {
+    $vulkanRoot = "C:\VulkanSDK"
+    if (Test-Path $vulkanRoot) {
+        $latestVulkan = Get-ChildItem -Path $vulkanRoot -Directory | Sort-Object Name -Descending | Select-Object -First 1
+        if ($latestVulkan) {
+            $env:VULKAN_SDK = $latestVulkan.FullName
+            Add-PathIfExists -PathToAdd (Join-Path $latestVulkan.FullName "Bin")
+        }
+    }
+}
 
 $stateDir = Join-Path $repoRoot ".run"
 $stateFile = Join-Path $stateDir "matchmaker.pid"
