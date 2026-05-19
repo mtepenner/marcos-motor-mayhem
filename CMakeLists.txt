@@ -77,15 +77,17 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities/hazard.cpp")
     list(APPEND GAME_SOURCES src/game/entities/hazard.cpp)
 endif()
 
-add_library(marcos_game STATIC ${GAME_SOURCES})
+if(GAME_SOURCES)
+    add_library(marcos_game STATIC ${GAME_SOURCES})
 
-target_include_directories(marcos_game PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/src
-)
+    target_include_directories(marcos_game PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+    )
 
-target_link_libraries(marcos_game PUBLIC
-    marcos_engine
-)
+    target_link_libraries(marcos_game PUBLIC
+        marcos_engine
+    )
+endif()
 
 # Main game executable
 add_executable(marcos-motor-mayhem
@@ -94,8 +96,11 @@ add_executable(marcos-motor-mayhem
 
 target_link_libraries(marcos-motor-mayhem PRIVATE
     marcos_engine
-    marcos_game
 )
+
+if(TARGET marcos_game)
+    target_link_libraries(marcos-motor-mayhem PRIVATE marcos_game)
+endif()
 
 # Testing
 enable_testing()
