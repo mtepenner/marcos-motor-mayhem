@@ -1,4 +1,4 @@
-.PHONY: build clean test help run run-matchmaker all
+.PHONY: build clean test help run run-matchmaker up down all
 
 help:
 	@echo "marcos-motor-mayhem - Kart Racing Game Engine"
@@ -9,6 +9,8 @@ help:
 	@echo "  make clean           - Clean build artifacts"
 	@echo "  make run             - Run game client"
 	@echo "  make run-matchmaker  - Run matchmaking service"
+	@echo "  make up              - Start Redis + matchmaker + game (Windows)"
+	@echo "  make down            - Stop services started by make up (Windows)"
 	@echo "  make all             - Clean and build everything"
 	@echo "  make help            - Show this help message"
 
@@ -43,6 +45,12 @@ run-matchmaker:
 	@cd src/cmd/matchmaker && go build -o ../../../build/matchmaker main.go
 	@echo "Starting matchmaker service on port 50051..."
 	@./build/matchmaker --port 50051 --redis localhost:6379
+
+up:
+	@pwsh -ExecutionPolicy Bypass -File scripts/spin-up.ps1
+
+down:
+	@pwsh -ExecutionPolicy Bypass -File scripts/spin-down.ps1
 
 test-backend:
 	@echo "Testing Go backend services..."

@@ -85,6 +85,22 @@ go build -o ../../build/matchmaker main.go
 ./build/matchmaker --port 50051 --redis localhost:6379
 ```
 
+### Spin Up Everything At Once (Windows)
+```powershell
+make up
+```
+
+This command:
+- starts a local Redis container (`mmm-redis`) if Docker is available,
+- builds the C++ game and Go matchmaker,
+- starts the matchmaker service,
+- launches the game client.
+
+Stop services with:
+```powershell
+make down
+```
+
 ## Network Protocol
 
 The state synchronization service uses UDP for low-latency updates:
