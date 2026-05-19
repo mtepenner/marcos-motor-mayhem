@@ -60,3 +60,15 @@ coverage.txt
 # Logs
 *.log
 logs/
+
+# Unreal Engine generated files
+Unreal/**/Binaries/
+Unreal/**/DerivedDataCache/
+Unreal/**/Intermediate/
+Unreal/**/Saved/
+Unreal/**/*.sln
+Unreal/**/*.vcxproj*
+Unreal/**/*.VC.db
+Unreal/**/*.opensdf
+Unreal/**/*.sdf
+

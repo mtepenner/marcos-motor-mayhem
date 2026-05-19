@@ -58,6 +58,7 @@ marcos-motor-mayhem/
 - C++17 compiler (GCC 10+, Clang 12+, MSVC 2019+)
 - Vulkan SDK 1.3+
 - Go 1.22+ (for backend services)
+- Unreal Engine 5.4+ (for the new 3D migration scaffold under `Unreal/MarcosMotorMayhem`)
 
 ### Build Steps
 
@@ -110,6 +111,31 @@ Stop services with:
 ```powershell
 make down
 ```
+
+## Unreal Engine Migration
+
+An Unreal Engine 5 C++ project scaffold now lives under `Unreal/MarcosMotorMayhem`.
+
+What is included:
+- a real `.uproject`,
+- a game module,
+- a drivable pawn with chase camera,
+- a simple 3D arena actor,
+- default input bindings for keyboard and gamepad,
+- project config that boots into the Unreal game mode.
+
+How to use it:
+1. Install Unreal Engine 5.4 or newer.
+2. Open `Unreal/MarcosMotorMayhem/MarcosMotorMayhem.uproject` in Unreal Editor.
+3. Let Unreal generate project files if prompted.
+4. Press Play in the editor.
+
+Default Unreal controls:
+- `W` / `S` throttle and reverse
+- `A` / `D` steer
+- `R` reset kart
+
+Current limitation: Unreal is not installed in this workspace environment, so the scaffold was created but not compiled here.
 
 ## Network Protocol
 
