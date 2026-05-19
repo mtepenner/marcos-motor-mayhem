@@ -51,11 +51,19 @@ target_link_libraries(marcos_engine PUBLIC
 )
 
 # Game library sources
-set(GAME_SOURCES
-    src/game/modes/race_state.cpp
-    src/game/modes/grand_prix.cpp
-    src/game/modes/time_trial.cpp
-)
+set(GAME_SOURCES)
+
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/game/modes/race_state.cpp")
+    list(APPEND GAME_SOURCES src/game/modes/race_state.cpp)
+endif()
+
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/game/modes/grand_prix.cpp")
+    list(APPEND GAME_SOURCES src/game/modes/grand_prix.cpp)
+endif()
+
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/game/modes/time_trial.cpp")
+    list(APPEND GAME_SOURCES src/game/modes/time_trial.cpp)
+endif()
 
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/game/items/projectile.cpp")
     list(APPEND GAME_SOURCES src/game/items/projectile.cpp)
