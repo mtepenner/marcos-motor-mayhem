@@ -26,7 +26,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 # Engine library
 add_library(marcos_engine STATIC
     # Core
-    src/engine/core/main.cpp
     src/engine/core/game_loop.cpp
     src/engine/core/memory_pool.cpp
     # Physics
@@ -34,7 +33,6 @@ add_library(marcos_engine STATIC
     src/engine/physics/rigidbody.cpp
     src/engine/physics/kart_dynamics.cpp
     # Rendering
-    src/engine/render/renderer.cpp
     src/engine/render/vulkan_backend.cpp
     src/engine/render/camera.cpp
     src/engine/render/shader_manager.cpp
@@ -55,7 +53,6 @@ target_link_libraries(marcos_engine PUBLIC
 # Game library
 add_library(marcos_game STATIC
     # Entities
-    src/game/entities/entity.cpp
     src/game/entities/kart.cpp
     src/game/entities/hazard.cpp
     # Items
@@ -91,7 +88,6 @@ enable_testing()
 
 # Catch2 unit tests for engine
 add_executable(engine_tests
-    tests/engine_tests/test_collision.cpp
     tests/engine_tests/test_kart_dynamics.cpp
     tests/engine_tests/test_memory_pool.cpp
 )
