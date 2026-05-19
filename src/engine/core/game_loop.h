@@ -22,7 +22,8 @@ public:
         float  time_scale{1.f};     // slow-motion / fast-forward
     };
 
-    explicit GameLoop(Config cfg = {}) : cfg_(cfg) {}
+    GameLoop() = default;
+    explicit GameLoop(const Config& cfg) : cfg_(cfg) {}
 
     // Runs until should_quit() returns true.
     void run(UpdateFn update, RenderFn render, QuitFn should_quit);
