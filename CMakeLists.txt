@@ -121,10 +121,14 @@ endif()
 # Compiler-specific options
 if(MSVC)
     target_compile_options(marcos_engine PRIVATE /W4)
-    target_compile_options(marcos_game PRIVATE /W4)
+    if(TARGET marcos_game)
+        target_compile_options(marcos_game PRIVATE /W4)
+    endif()
 else()
     target_compile_options(marcos_engine PRIVATE -Wall -Wextra -Wpedantic)
-    target_compile_options(marcos_game PRIVATE -Wall -Wextra -Wpedantic)
+    if(TARGET marcos_game)
+        target_compile_options(marcos_game PRIVATE -Wall -Wextra -Wpedantic)
+    endif()
 endif()
 
 # Install targets
