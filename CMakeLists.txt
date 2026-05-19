@@ -52,7 +52,6 @@ target_link_libraries(marcos_engine PUBLIC
 
 # Game library sources
 set(GAME_SOURCES
-    src/game/items/item_manager.cpp
     src/game/items/projectile.cpp
     src/game/items/boost.cpp
     src/game/modes/race_state.cpp
