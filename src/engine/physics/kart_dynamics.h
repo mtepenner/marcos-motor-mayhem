@@ -2,6 +2,7 @@
 #include "rigidbody.h"
 #include <cmath>
 #include <algorithm>
+#include <cstdint>
 
 namespace mmm {
 
