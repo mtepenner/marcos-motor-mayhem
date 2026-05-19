@@ -19,12 +19,13 @@ int main(int /*argc*/, char** /*argv*/) {
     // Add a placeholder kart
     race.register_kart(1, "Marco Polo");
 
-    mmm::GameLoop loop({
-        .target_fps = 60.f,
-        .max_steps  = 8,
-        .headless   = false,
-        .time_scale = 1.f
-    });
+    mmm::GameLoop::Config config{};
+    config.target_fps = 60.f;
+    config.max_steps = 8;
+    config.headless = false;
+    config.time_scale = 1.f;
+
+    mmm::GameLoop loop(config);
 
     int tick_limit = 60 * 30; // run for 30 simulated seconds then exit
     int ticks      = 0;
