@@ -1,0 +1,62 @@
+# Build directories
+build/
+cmake-build-debug/
+cmake-build-release/
+out/
+dist/
+bin/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+
+# C++ build artifacts
+*.o
+*.obj
+*.a
+*.lib
+*.dll
+*.dylib
+*.so
+*.exe
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+
+# Go build artifacts
+*.exe
+*.test
+*.out
+vendor/
+
+# Temporary files
+*.tmp
+*.bak
+.#*
+
+# OS specific
+Thumbs.db
+.DS_Store
+
+# Generated files
+*.pb.go
+*.pb.cc
+*.pb.h
+
+# Test coverage
+*.coverage
+coverage.txt
+
+# Logs
+*.log
+logs/
