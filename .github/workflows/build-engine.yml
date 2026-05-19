@@ -16,7 +16,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Install dependencies (Ubuntu)
       if: runner.os == 'Linux'
@@ -28,6 +28,15 @@ jobs:
       if: runner.os == 'macOS'
       run: |
         brew install cmake vulkan-loader
+
+    - name: Install dependencies (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        choco install vulkan-sdk --yes
+        $sdk = Get-ChildItem 'C:\VulkanSDK' | Sort-Object Name -Descending | Select-Object -First 1
+        "VULKAN_SDK=$($sdk.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Append
+        "$($sdk.FullName)\Bin" | Out-File -FilePath $env:GITHUB_PATH -Append
     
     - name: Configure CMake (Windows)
       if: runner.os == 'Windows'
