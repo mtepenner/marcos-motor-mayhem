@@ -80,6 +80,16 @@ go build -o ../../build/matchmaker main.go
 ./build/marcos-motor-mayhem
 ```
 
+Current local build behavior:
+- the game launches as a playable terminal UI,
+- `W` accelerates,
+- `S` brakes,
+- `A` and `D` steer,
+- `Space` drifts,
+- `Q` or `Esc` quits.
+
+The terminal view shows a top-down track, your kart (`P`), AI racers (`1`-`3`), lap count, speed, and standings.
+
 ### Matchmaking Service
 ```bash
 ./build/matchmaker --port 50051 --redis localhost:6379

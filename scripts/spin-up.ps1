@@ -128,7 +128,7 @@ if (Test-Path $stateFile) {
 }
 
 Write-Host "[spin-up] Starting matchmaker on port $MatchmakerPort..."
-$matchmakerProcess = Start-Process -FilePath $matchmakerOutput -ArgumentList @("--port", "$MatchmakerPort", "--redis", $RedisAddress) -PassThru -WindowStyle Normal
+$matchmakerProcess = Start-Process -FilePath $matchmakerOutput -ArgumentList @("--port", "$MatchmakerPort", "--redis", $RedisAddress) -PassThru -WindowStyle Hidden
 Set-Content -Path $stateFile -Value $matchmakerProcess.Id
 
 $gameCandidates = @(
