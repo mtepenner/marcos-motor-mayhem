@@ -1,4 +1,4 @@
-#include "World/MMMRaceArena.h"
+#include "MMMRaceArena.h"
 
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"

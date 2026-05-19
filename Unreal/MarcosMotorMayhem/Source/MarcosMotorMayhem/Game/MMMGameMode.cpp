@@ -1,11 +1,12 @@
-#include "Game/MMMGameMode.h"
+#include "MMMGameMode.h"
 
 #include "Engine/DirectionalLight.h"
 #include "Engine/SkyLight.h"
 #include "EngineUtils.h"
 #include "Components/LightComponent.h"
-#include "Game/MMMKartPawn.h"
-#include "World/MMMRaceArena.h"
+#include "Components/SkyLightComponent.h"
+#include "MMMKartPawn.h"
+#include "../World/MMMRaceArena.h"
 
 AMMMGameMode::AMMMGameMode()
 {

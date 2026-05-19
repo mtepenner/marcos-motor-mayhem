@@ -1,4 +1,4 @@
-#include "Game/MMMKartPawn.h"
+#include "MMMKartPawn.h"
 
 #include "Camera/CameraComponent.h"
 #include "Components/InputComponent.h"
