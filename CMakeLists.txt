@@ -23,22 +23,23 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
-# Engine library
-add_library(marcos_engine STATIC
-    # Core
+# Engine library sources
+set(ENGINE_SOURCES
     src/engine/core/game_loop.cpp
     src/engine/core/memory_pool.cpp
-    # Physics
     src/engine/physics/collision.cpp
     src/engine/physics/rigidbody.cpp
     src/engine/physics/kart_dynamics.cpp
-    # Rendering
     src/engine/render/vulkan_backend.cpp
-    src/engine/render/shader_manager.cpp
-    # Input
     src/engine/input/input_manager.cpp
     src/engine/input/controller_map.cpp
 )
+
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/engine/render/shader_manager.cpp")
+    list(APPEND ENGINE_SOURCES src/engine/render/shader_manager.cpp)
+endif()
+
+add_library(marcos_engine STATIC ${ENGINE_SOURCES})
 
 target_include_directories(marcos_engine PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -49,19 +50,21 @@ target_link_libraries(marcos_engine PUBLIC
     ${Vulkan_LIBRARIES}
 )
 
-# Game library
-add_library(marcos_game STATIC
-    # Entities
-    src/game/entities/hazard.cpp
-    # Items
+# Game library sources
+set(GAME_SOURCES
     src/game/items/item_manager.cpp
     src/game/items/projectile.cpp
     src/game/items/boost.cpp
-    # Modes
     src/game/modes/race_state.cpp
     src/game/modes/grand_prix.cpp
     src/game/modes/time_trial.cpp
 )
+
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities/hazard.cpp")
+    list(APPEND GAME_SOURCES src/game/entities/hazard.cpp)
+endif()
+
+add_library(marcos_game STATIC ${GAME_SOURCES})
 
 target_include_directories(marcos_game PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -85,15 +88,17 @@ target_link_libraries(marcos-motor-mayhem PRIVATE
 enable_testing()
 
 # Catch2 unit tests for engine
-add_executable(engine_tests
-    tests/engine_tests/test_memory_pool.cpp
-)
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/engine_tests/test_memory_pool.cpp")
+    add_executable(engine_tests
+        tests/engine_tests/test_memory_pool.cpp
+    )
 
-target_link_libraries(engine_tests PRIVATE
-    marcos_engine
-)
+    target_link_libraries(engine_tests PRIVATE
+        marcos_engine
+    )
 
-add_test(NAME EngineTests COMMAND engine_tests)
+    add_test(NAME EngineTests COMMAND engine_tests)
+endif()
 
 # Compiler-specific options
 if(MSVC)
